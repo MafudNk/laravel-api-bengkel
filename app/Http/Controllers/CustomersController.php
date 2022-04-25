@@ -13,6 +13,7 @@ use App\Http\Requests\CustomerCreateRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Repositories\CustomerRepository;
 use App\Validators\CustomerValidator;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class CustomersController.
@@ -52,13 +53,23 @@ class CustomersController extends Controller
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $customers = $this->repository->all();
-
-        if (request()->wantsJson()) {
-            return ResponseFormatter::success(
-                $customers,
-                'Data customer berhasil diambil.'
-            );
-        }
+        // $credential = Auth::guard('api')->check();
+        // print_r($credential);exit;
+        // if ($credential) {
+            if (request()->wantsJson()) {
+                return ResponseFormatter::success(
+                    $customers,
+                    'Data customer berhasil diambil.'
+                );
+            }
+        // }else {
+        //     return ResponseFormatter::error(
+        //         'Unauthorized',
+        //         'Silahkan login terlebih dahulu.',
+        //         401
+        //     );
+        // }
+        
 
         return view('customers.index', compact('customers'));
     }
@@ -88,7 +99,7 @@ class CustomersController extends Controller
             if ($request->wantsJson()) {
 
                 return ResponseFormatter::success(
-                    $response,
+                    $customer->toArray(),
                     'Data customer berhasil ditambahkan.'
                 );
             }
@@ -168,7 +179,7 @@ class CustomersController extends Controller
             if ($request->wantsJson()) {
 
                 return ResponseFormatter::success(
-                    $response,
+                    $customer->toArray(),
                     'Data customer berhasil diubah.'
                 );
             }
@@ -200,7 +211,6 @@ class CustomersController extends Controller
     {
         
         $deleted = Customer::Where('id',$id)->first();
-        // print_r($deleted->id);exit;
         if (!empty($deleted->id) && isset($deleted->id)) {
             $deleted = $this->repository->delete($id);
             if (request()->wantsJson()) {

@@ -1,11 +1,15 @@
 <?php
 
+use App\Entities\TPenerimaanBarang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomersController;
-use App\Http\Controllers\EmersonTestesController;
+use App\Http\Controllers\MMobilsController;
+use App\Http\Controllers\MSparepartsController;
+use App\Http\Controllers\TPerbaikansController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,12 +26,21 @@ use App\Http\Controllers\EmersonTestesController;
 //get token
 Route::post('token', [AuthController::class, 'auth']);
 
+
 /**Midlleware for Auth Routes */
-Route::middleware('auth:api')->group(function(){
+Route::middleware('auth:api','VerifyApi')->group(function(){
     Route::resources([
         'user' => UserController::class,
         'customer' => CustomersController::class,
+        'mobil' => MMobilsController::class,
+        'sparepart' => MSparepartsController::class,
+        'perbaikan' => TPerbaikansController::class,
+        'penerimaan_barang' => TPenerimaanBarang::class,
     ]);
-   
+    Route::get('/validate-token', function () {
+        return ['data' => 'Token is valid'];
+    })->middleware('auth:api');
+    // Route::get('/customer', [CustomersController::class,'index'])->middleware('api.admin');
+    Route::post('logout', [AuthController::class, 'logout']);
 });
 

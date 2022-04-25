@@ -20,6 +20,9 @@ class CreateMMobilsTable extends Migration
 			$table->string('nama');
 			$table->string('no_chasis');
 			$table->string('no_mesin');
+			$table->string('no_pol');
+			$table->string('merk_mobil');
+			$table->string('tipe_mobil');
             $table->timestamps();
 		});
 	}

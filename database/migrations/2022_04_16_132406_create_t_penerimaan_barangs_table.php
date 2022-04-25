@@ -4,9 +4,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Class CreateMKategoriPekerjaansTable.
+ * Class CreateTPenerimaanBarangsTable.
  */
-class CreateMKategoriPekerjaansTable extends Migration
+class CreateTPenerimaanBarangsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -15,9 +15,10 @@ class CreateMKategoriPekerjaansTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('m_kategori_pekerjaans', function(Blueprint $table) {
+		Schema::create('t_penerimaan_barangs', function(Blueprint $table) {
             $table->increments('id');
-			$table->string('nama');
+            $table->string('nama_supplier');
+            $table->date('tanggal_penerimaan');	
             $table->timestamps();
 		});
 	}
@@ -29,6 +30,6 @@ class CreateMKategoriPekerjaansTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('m_kategori_pekerjaans');
+		Schema::drop('t_penerimaan_barangs');
 	}
 }
