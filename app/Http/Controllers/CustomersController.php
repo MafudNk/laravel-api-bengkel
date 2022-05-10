@@ -53,24 +53,12 @@ class CustomersController extends Controller
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $customers = $this->repository->all();
-        // $credential = Auth::guard('api')->check();
-        // print_r($credential);exit;
-        // if ($credential) {
             if (request()->wantsJson()) {
                 return ResponseFormatter::success(
                     $customers,
                     'Data customer berhasil diambil.'
                 );
             }
-        // }else {
-        //     return ResponseFormatter::error(
-        //         'Unauthorized',
-        //         'Silahkan login terlebih dahulu.',
-        //         401
-        //     );
-        // }
-        
-
         return view('customers.index', compact('customers'));
     }
 
@@ -167,8 +155,8 @@ class CustomersController extends Controller
     {
         try {
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
             // print_r($request->all());exit;
+            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
             $customer = $this->repository->update($request->all(), $id);
 
             $response = [

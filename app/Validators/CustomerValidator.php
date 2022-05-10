@@ -18,7 +18,18 @@ class CustomerValidator extends LaravelValidator
      * @var array
      */
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [],
-        ValidatorInterface::RULE_UPDATE => [],
+        ValidatorInterface::RULE_CREATE => [
+            'nama_customer' => 'required|max:255',
+            'email' => 'required|max:255',
+            'no_telp' => 'required|max:255',
+            'alamat' => 'required|max:255',
+        ],
+        ValidatorInterface::RULE_UPDATE => [
+            'id' => 'required',
+            'nama_customer' => 'required|max:255',
+            'email' => 'required|max:255',
+            'no_telp' => 'required|max:255',
+            'alamat' => 'required|max:255',
+        ],
     ];
 }
