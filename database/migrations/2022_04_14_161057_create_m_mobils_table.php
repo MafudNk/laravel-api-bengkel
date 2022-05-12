@@ -17,6 +17,7 @@ class CreateMMobilsTable extends Migration
 	{
 		Schema::create('m_mobils', function(Blueprint $table) {
             $table->increments('id');
+			$table->integer('customer_id')->unsigned();
 			$table->string('nama');
 			$table->string('no_chasis');
 			$table->string('no_mesin');

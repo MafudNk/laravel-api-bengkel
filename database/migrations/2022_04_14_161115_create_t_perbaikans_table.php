@@ -17,7 +17,6 @@ class CreateTPerbaikansTable extends Migration
 	{
 		Schema::create('t_perbaikans', function(Blueprint $table) {
             $table->increments('id');
-			$table->integer('customer_id')->unsigned();
 			$table->integer('mobil_id')->unsigned();
 			$table->date('estimasi_selesai');
 			$table->date('tanggal_masuk')->nullable();

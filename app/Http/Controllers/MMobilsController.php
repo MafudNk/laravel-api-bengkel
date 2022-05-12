@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\MMobil;
+use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -53,9 +55,7 @@ class MMobilsController extends Controller
 
         if (request()->wantsJson()) {
 
-            return response()->json([
-                'data' => $mMobils,
-            ]);
+            ResponseFormatter::success($mMobils, 'Data mobil berhasil diambil');
         }
 
         return view('mMobils.index', compact('mMobils'));
@@ -85,16 +85,13 @@ class MMobilsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return response()->json($response);
+                return ResponseFormatter::success($response, 'Data berhasil ditambahkan');
             }
 
             return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
+                return ResponseFormatter::error($e->getMessageBag(), 'Data gagal disimpan', 500);
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
@@ -114,9 +111,7 @@ class MMobilsController extends Controller
 
         if (request()->wantsJson()) {
 
-            return response()->json([
-                'data' => $mMobil,
-            ]);
+            return ResponseFormatter::success($mMobil, 'Data berhasil diambil');
         }
 
         return view('mMobils.show', compact('mMobil'));
@@ -161,7 +156,7 @@ class MMobilsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return response()->json($response);
+                return ResponseFormatter::success($response, 'Data berhasil diubah');
             }
 
             return redirect()->back()->with('message', $response['message']);
@@ -169,10 +164,7 @@ class MMobilsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
+                return responseFormatter::error($e->getMessageBag(), 'Data gagal diubah', 500);
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
@@ -189,14 +181,24 @@ class MMobilsController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
+        $deleted = MMobil::where('id', $id)->first();
 
-        if (request()->wantsJson()) {
 
-            return response()->json([
-                'message' => 'MMobil deleted.',
-                'deleted' => $deleted,
-            ]);
+
+        if (!empty($deleted->id) && isset($deleted->id)) {
+            $deleted = $this->repository->delete($id);
+            if (request()->wantsJson()) {
+
+                return ResponseFormatter::success($deleted, 'Data berhasil dihapus');
+            }
+        } else {
+            if (request()->wantsJson()) {
+
+                return ResponseFormatter::error(
+                    null,
+                    'Data customer gagal dihapus.'
+                );
+            }
         }
 
         return redirect()->back()->with('message', 'MMobil deleted.');
