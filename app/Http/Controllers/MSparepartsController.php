@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -53,9 +54,7 @@ class MSparepartsController extends Controller
 
         if (request()->wantsJson()) {
 
-            return response()->json([
-                'data' => $mSpareparts,
-            ]);
+            return ResponseFormatter::success($mSpareparts, 'Data sparepart berhasil diambil');
         }
 
         return view('mSpareparts.index', compact('mSpareparts'));
@@ -85,16 +84,13 @@ class MSparepartsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return response()->json($response);
+                return ResponseFormatter::success($response,'Data sparepart berhasil ditambahkan');
             }
 
             return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
+                return ResponseFormatter::error($e->getMessageBag(), 'Data gagal ditambahkan');
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
