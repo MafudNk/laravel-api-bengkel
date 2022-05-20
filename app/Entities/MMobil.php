@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class MMobil extends Model
 {
     use HasFactory;
-    protected $table = 'customers';
+    protected $table = 'm_mobils';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +21,6 @@ class MMobil extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',    'no_chasis', 'no_mesin', 'no_pol', 'merk_mobil', 'tipe_mobil',
+        'nama',  'customers_id', 'no_chasis', 'no_mesin', 'no_pol', 'merk_mobil', 'tipe_mobil',
     ];
 }

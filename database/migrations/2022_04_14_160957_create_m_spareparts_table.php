@@ -17,6 +17,7 @@ class CreateMSparepartsTable extends Migration
 	{
 		Schema::create('m_spareparts', function(Blueprint $table) {
             $table->increments('id');
+			$table->integer('t_penerimaan_barangs_id')->unsigned();
 			$table->string('nama');
 			$table->string('kode_part');
 			$table->integer('qty');

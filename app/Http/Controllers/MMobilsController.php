@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\MMobilCreateRequest;
-use App\Http\Requests\MMobilUpdateRequest;
+use App\Http\Requests\m_mobilCreateRequest;
+use App\Http\Requests\m_mobilUpdateRequest;
 use App\Repositories\MMobilRepository;
-use App\Validators\MMobilValidator;
+use App\Validators\MobilValidator;
 
 /**
  * Class MMobilsController.
@@ -27,7 +27,7 @@ class MMobilsController extends Controller
     protected $repository;
 
     /**
-     * @var MMobilValidator
+     * @var MobilValidator
      */
     protected $validator;
 
@@ -35,9 +35,9 @@ class MMobilsController extends Controller
      * MMobilsController constructor.
      *
      * @param MMobilRepository $repository
-     * @param MMobilValidator $validator
+     * @param MobilValidator $validator
      */
-    public function __construct(MMobilRepository $repository, MMobilValidator $validator)
+    public function __construct(MMobilRepository $repository, MobilValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -55,7 +55,7 @@ class MMobilsController extends Controller
 
         if (request()->wantsJson()) {
 
-            ResponseFormatter::success($mMobils, 'Data mobil berhasil diambil');
+           return ResponseFormatter::success($mMobils, 'Data mobil berhasil diambil');
         }
 
         return view('mMobils.index', compact('mMobils'));
@@ -64,13 +64,13 @@ class MMobilsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  MMobilCreateRequest $request
+     * @param  m_mobilCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(MMobilCreateRequest $request)
+    public function store(m_mobilCreateRequest $request)
     {
         try {
 
@@ -134,14 +134,14 @@ class MMobilsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  MMobilUpdateRequest $request
+     * @param  m_mobilUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update(MMobilUpdateRequest $request, $id)
+    public function update(m_mobilUpdateRequest $request, $id)
     {
         try {
 

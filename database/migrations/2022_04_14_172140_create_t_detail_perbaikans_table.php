@@ -17,8 +17,8 @@ class CreateTDetailPerbaikansTable extends Migration
 	{
 		Schema::create('t_detail_perbaikans', function(Blueprint $table) {
             $table->increments('id');
-			$table->integer('perbaikan_id')->unsigned();
-			$table->integer('sparepart_id')->unsigned();
+			$table->integer('t_perbaikans_id')->unsigned();
+			$table->integer('m_spareparts_id')->unsigned();
 			$table->integer('qty');
             $table->timestamps();
 		});
