@@ -24,6 +24,7 @@ class CreateMMobilsTable extends Migration
 			$table->string('no_pol');
 			$table->string('merk_mobil');
 			$table->string('tipe_mobil');
+			$table->string('asuransi');
             $table->timestamps();
 		});
 	}

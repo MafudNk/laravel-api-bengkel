@@ -13,6 +13,7 @@ use App\Http\Requests\m_mobilCreateRequest;
 use App\Http\Requests\m_mobilUpdateRequest;
 use App\Repositories\MMobilRepository;
 use App\Validators\MobilValidator;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class MMobilsController.
@@ -51,7 +52,10 @@ class MMobilsController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $mMobils = $this->repository->all();
+        $mMobils = DB::table('m_mobils')
+            ->join('customers', 'm_mobils.customers_id', '=', 'customers.id')
+            ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer'))
+            ->get();
 
         if (request()->wantsJson()) {
 
