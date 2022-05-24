@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\MSparepart;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
@@ -110,9 +111,7 @@ class MSparepartsController extends Controller
 
         if (request()->wantsJson()) {
 
-            return response()->json([
-                'data' => $mSparepart,
-            ]);
+            return ResponseFormatter::success($mSparepart, 'Data sparepart berhasil diambil');
         }
 
         return view('mSpareparts.show', compact('mSparepart'));
@@ -157,7 +156,7 @@ class MSparepartsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return response()->json($response);
+                return ResponseFormatter::success($response,'Data sparepart berhasil diubah');
             }
 
             return redirect()->back()->with('message', $response['message']);
@@ -165,10 +164,7 @@ class MSparepartsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
+                return ResponseFormatter::error($e->getMessageBag(), 'Data gagal diubah');
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
@@ -185,16 +181,25 @@ class MSparepartsController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
+        $deleted = MSparepart::where('id', $id)->first();
 
-        if (request()->wantsJson()) {
+        if (!empty($deleted->id) && isset($deleted->id)) {
+            $deleted = $this->repository->delete($id);
+            if (request()->wantsJson()) {
 
-            return response()->json([
-                'message' => 'MSparepart deleted.',
-                'deleted' => $deleted,
-            ]);
+                return ResponseFormatter::success(
+                    $deleted,
+                    'Data sparepart berhasil dihapus.'
+                );
+            }
+        } else {
+            if (request()->wantsJson()) {
+
+                return ResponseFormatter::error(
+                    null,
+                    'Data sparepart gagal dihapus.'
+                );
+            }
         }
-
-        return redirect()->back()->with('message', 'MSparepart deleted.');
     }
 }

@@ -13,7 +13,7 @@ class t_penerimaan_barangCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

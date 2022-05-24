@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\MSparepart;
+use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\TPenerimaanBarangCreateRequest;
-use App\Http\Requests\TPenerimaanBarangUpdateRequest;
+use App\Http\Requests\t_penerimaan_barangCreateRequest;
+use App\Http\Requests\t_penerimaan_barangUpdateRequest;
 use App\Repositories\TPenerimaanBarangRepository;
-use App\Validators\TPenerimaanBarangValidator;
+use App\Validators\TPenerimaanValidator;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class TPenerimaanBarangsController.
@@ -25,7 +28,7 @@ class TPenerimaanBarangsController extends Controller
     protected $repository;
 
     /**
-     * @var TPenerimaanBarangValidator
+     * @var TPenerimaanValidator
      */
     protected $validator;
 
@@ -33,9 +36,9 @@ class TPenerimaanBarangsController extends Controller
      * TPenerimaanBarangsController constructor.
      *
      * @param TPenerimaanBarangRepository $repository
-     * @param TPenerimaanBarangValidator $validator
+     * @param TPenerimaanValidator $validator
      */
-    public function __construct(TPenerimaanBarangRepository $repository, TPenerimaanBarangValidator $validator)
+    public function __construct(TPenerimaanBarangRepository $repository, TPenerimaanValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -49,13 +52,14 @@ class TPenerimaanBarangsController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $tPenerimaanBarangs = $this->repository->all();
+        $tPenerimaanBarangs = DB::table('t_penerimaan_barangs')
+            ->join('m_spareparts', 't_penerimaan_barangs.id', '=', 'm_spareparts.t_penerimaan_barangs_id')
+            ->select(DB::raw('t_penerimaan_barangs.*, m_spareparts.nama as nama_sparepart, m_spareparts.kode_part , m_spareparts.qty'))
+            ->get();
 
         if (request()->wantsJson()) {
 
-            return response()->json([
-                'data' => $tPenerimaanBarangs,
-            ]);
+            return ResponseFormatter::success($tPenerimaanBarangs, 'Data penerimaan barang berhasil diambil');
         }
 
         return view('tPenerimaanBarangs.index', compact('tPenerimaanBarangs'));
@@ -64,13 +68,13 @@ class TPenerimaanBarangsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  TPenerimaanBarangCreateRequest $request
+     * @param  t_penerimaan_barangCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(TPenerimaanBarangCreateRequest $request)
+    public function store(t_penerimaan_barangCreateRequest $request)
     {
         try {
 
@@ -84,8 +88,18 @@ class TPenerimaanBarangsController extends Controller
             ];
 
             if ($request->wantsJson()) {
+                $sparepart = new MSparepart;
+                $sparepart->t_penerimaan_barangs_id = $tPenerimaanBarang->id;
+                $sparepart->nama = $request->nama_sparepart;
+                $sparepart->kode_part = $request->kode_part;
+                $sparepart->qty = $request->qty;
+                $sparepart->save();
 
-                return response()->json($response);
+                if ($sparepart->id) {
+                    return ResponseFormatter::success($sparepart, 'Data sparepart berhasil ditambahkan');
+                }else{
+                    return ResponseFormatter::error($response, 'Data sparepart gagal ditambahkan');
+                }
             }
 
             return redirect()->back()->with('message', $response['message']);
@@ -139,14 +153,14 @@ class TPenerimaanBarangsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  TPenerimaanBarangUpdateRequest $request
+     * @param  t_penerimaan_barangUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update(TPenerimaanBarangUpdateRequest $request, $id)
+    public function update(t_penerimaan_barangUpdateRequest $request, $id)
     {
         try {
 
