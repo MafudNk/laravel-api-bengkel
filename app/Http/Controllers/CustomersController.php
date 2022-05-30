@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Customer;
+use App\Entities\MMobil;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
@@ -85,11 +86,25 @@ class CustomersController extends Controller
             ];
 
             if ($request->wantsJson()) {
+                $mobil = new MMobil;
+                $mobil->nama = $request->nama_mobil;
+                $mobil->customers_id = $customer->id;
+                $mobil->no_chasis = $request->no_chasis;
+                $mobil->no_mesin = $request->no_mesin;
+                $mobil->no_pol = $request->no_pol;
+                $mobil->merk_mobil = $request->merk_mobil;
+                $mobil->tipe_mobil = $request->tipe_mobil;
+                $mobil->save();
 
-                return ResponseFormatter::success(
-                    $customer->toArray(),
-                    'Data customer berhasil ditambahkan.'
-                );
+                if ($mobil->id) {
+                    return ResponseFormatter::success($mobil, 'Data customer dan mobil berhasil ditambahkan');
+                }else{
+                    return ResponseFormatter::error($response, 'Data customer dan mobil gagal ditambahkan');
+                }
+                // return ResponseFormatter::success(
+                //     $customer->toArray(),
+                //     'Data customer berhasil ditambahkan.'
+                // );
             }
 
             return redirect()->back()->with('message', $response['message']);
