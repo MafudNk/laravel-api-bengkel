@@ -94,6 +94,7 @@ class CustomersController extends Controller
                 $mobil->no_pol = $request->no_pol;
                 $mobil->merk_mobil = $request->merk_mobil;
                 $mobil->tipe_mobil = $request->tipe_mobil;
+                $mobil->asuransi = $request->asuransi;
                 $mobil->save();
 
                 if ($mobil->id) {
