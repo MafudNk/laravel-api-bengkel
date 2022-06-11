@@ -111,11 +111,15 @@ class MMobilsController extends Controller
      */
     public function show($id)
     {
-        $mMobil = $this->repository->find($id);
+        $mMobils = DB::table('m_mobils')
+        ->where('m_mobils.id', '=' ,$id)
+        ->join('customers', 'm_mobils.customers_id', '=', 'customers.id')
+        ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer'))
+        ->get();
 
         if (request()->wantsJson()) {
 
-            return ResponseFormatter::success($mMobil, 'Data berhasil diambil');
+            return ResponseFormatter::success($mMobils, 'Data berhasil diambil');
         }
 
         return view('mMobils.show', compact('mMobil'));
