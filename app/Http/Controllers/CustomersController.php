@@ -134,7 +134,7 @@ class CustomersController extends Controller
         $customer = DB::table('m_mobils')
         ->where('m_mobils.id', '=' ,$id)
         ->join('customers', 'm_mobils.customers_id', '=', 'customers.id')
-        ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer, customer.alamat as alamat_customer, customer.no_telp as no_telp, customer.email as email'))
+        ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer, customers.alamat as alamat_customer, customers.no_telp as no_telp, customers.email as email'))
         ->first();
 
         if (request()->wantsJson()) {
