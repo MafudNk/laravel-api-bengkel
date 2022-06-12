@@ -15,6 +15,7 @@ use App\Http\Requests\CustomerUpdateRequest;
 use App\Repositories\CustomerRepository;
 use App\Validators\CustomerValidator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class CustomersController.
@@ -130,7 +131,11 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        $customer = $this->repository->find($id);
+        $customer = DB::table('m_mobils')
+        ->where('m_mobils.id', '=' ,$id)
+        ->join('customers', 'm_mobils.customers_id', '=', 'customers.id')
+        ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer, customer.alamat_customer as alamat_customer, customer.no_telp as no_telp, customer.email as email'))
+        ->first();
 
         if (request()->wantsJson()) {
 
