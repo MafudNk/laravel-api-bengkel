@@ -176,7 +176,7 @@ class CustomersController extends Controller
     {
         try {
 
-            // print_r($request->all());exit;
+            print_r($request->all());exit;
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
             $customer = $this->repository->update($request->all(), $id);
 
