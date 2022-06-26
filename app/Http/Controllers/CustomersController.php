@@ -186,7 +186,16 @@ class CustomersController extends Controller
             ];
 
             if ($request->wantsJson()) {
-
+                MMobil::where('id', $request->id_mobil)
+                ->update([
+                'merk_mobil' => $request->no_chasis,
+                'no_chasis' => $request->no_chasis,
+                'no_mesin' => $request->no_mesin,
+                'no_pol' => $request->no_pol,
+                'merk_mobil' => $request->merk_mobil,
+                'tipe_mobil' => $request->tipe_mobil,
+                'asuransi' => $request->asuransi
+                ]);
                 return ResponseFormatter::success(
                     $customer->toArray(),
                     'Data customer berhasil diubah.'
