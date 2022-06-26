@@ -64,6 +64,11 @@ class CustomersController extends Controller
         return view('customers.index', compact('customers'));
     }
 
+    public function update_post( Request $request)
+    {
+        return ResponseFormatter::success('sucess','data success');
+    }
+
     /**
      * Store a newly created resource in storage.
      *

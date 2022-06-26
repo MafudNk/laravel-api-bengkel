@@ -31,6 +31,7 @@ Route::post('token', [AuthController::class, 'auth']);
 /**Midlleware for Auth Routes */
 Route::middleware('auth:api','VerifyApi')->group(function(){
     Route::resources([
+        
         'user' => UserController::class,
         'customer' => CustomersController::class,
         'mobil' => MMobilsController::class,
@@ -43,5 +44,6 @@ Route::middleware('auth:api','VerifyApi')->group(function(){
     })->middleware('auth:api');
     // Route::get('/customer', [CustomersController::class,'index'])->middleware('api.admin');
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('customer_post', [CustomersController::class, 'update_post']);
 });
 
