@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\MSparepart;
+use App\Entities\TPenerimaanBarang;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
@@ -79,17 +80,21 @@ class TPenerimaanBarangsController extends Controller
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-
-            $tPenerimaanBarang = $this->repository->create($request->all());
+            $tanggal_penerimaan = date('Y-m-d', strtotime($request->tanggal_penerimaan));
+            // $tPenerimaanBarang = $this->repository->create($request->all());
+            $penerimaan = new TPenerimaanBarang;
+            $penerimaan->tanggal_penerimaan = $tanggal_penerimaan;
+            $penerimaan->nama_supplier = $request->nama_supplier;
+            $penerimaan->save();
 
             $response = [
                 'message' => 'TPenerimaanBarang created.',
-                'data'    => $tPenerimaanBarang->toArray(),
+                'data'    => $penerimaan->toArray(),
             ];
 
             if ($request->wantsJson()) {
                 $sparepart = new MSparepart;
-                $sparepart->t_penerimaan_barangs_id = $tPenerimaanBarang->id;
+                $sparepart->t_penerimaan_barangs_id = $penerimaan->id;
                 $sparepart->nama = $request->nama_sparepart;
                 $sparepart->kode_part = $request->kode_part;
                 $sparepart->qty = $request->qty;

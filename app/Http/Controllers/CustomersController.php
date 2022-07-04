@@ -66,7 +66,47 @@ class CustomersController extends Controller
 
     public function update_post( Request $request)
     {
-        return ResponseFormatter::success('sucess','data success');
+        try {
+
+            print_r($request->all());exit;
+            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $customer = $this->repository->update($request->all(), $id);
+
+            $response = [
+                'message' => 'Customer updated.',
+                'data'    => $customer->toArray(),
+            ];
+
+            if ($request->wantsJson()) {
+                MMobil::where('id', $request->id_mobil)
+                ->update([
+                'merk_mobil' => $request->no_chasis,
+                'no_chasis' => $request->no_chasis,
+                'no_mesin' => $request->no_mesin,
+                'no_pol' => $request->no_pol,
+                'merk_mobil' => $request->merk_mobil,
+                'tipe_mobil' => $request->tipe_mobil,
+                'asuransi' => $request->asuransi
+                ]);
+                return ResponseFormatter::success(
+                    $customer->toArray(),
+                    'Data customer berhasil diubah.'
+                );
+            }
+
+            return redirect()->back()->with('message', $response['message']);
+        } catch (ValidatorException $e) {
+
+            if ($request->wantsJson()) {
+
+                return ResponseFormatter::error(
+                    $e->getMessageBag(),
+                    'Data customer gagal diubah.'
+                );
+            }
+
+            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+        }
     }
 
     /**
