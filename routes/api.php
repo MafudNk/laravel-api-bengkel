@@ -27,7 +27,7 @@ use App\Http\Controllers\TPerbaikansController;
 //get token
 Route::post('token', [AuthController::class, 'auth']);
 
-
+Route::post('/customer_post/{id}', [CustomersController::class, 'update_post']);
 /**Midlleware for Auth Routes */
 Route::middleware('auth:api','VerifyApi')->group(function(){
     Route::resources([
@@ -44,6 +44,6 @@ Route::middleware('auth:api','VerifyApi')->group(function(){
     })->middleware('auth:api');
     // Route::get('/customer', [CustomersController::class,'index'])->middleware('api.admin');
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('customer_post', [CustomersController::class, 'update_post']);
+    
 });
 

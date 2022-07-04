@@ -55,16 +55,16 @@ class CustomersController extends Controller
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $customers = $this->repository->all();
-            if (request()->wantsJson()) {
-                return ResponseFormatter::success(
-                    $customers,
-                    'Data customer berhasil diambil.'
-                );
-            }
+        if (request()->wantsJson()) {
+            return ResponseFormatter::success(
+                $customers,
+                'Data customer berhasil diambil.'
+            );
+        }
         return view('customers.index', compact('customers'));
     }
 
-    public function update_post( Request $request)
+    public function update_post(Request $request)
     {
         try {
 
@@ -145,7 +145,7 @@ class CustomersController extends Controller
 
                 if ($mobil->id) {
                     return ResponseFormatter::success($mobil, 'Data customer dan mobil berhasil ditambahkan');
-                }else{
+                } else {
                     return ResponseFormatter::error($response, 'Data customer dan mobil gagal ditambahkan');
                 }
                 // return ResponseFormatter::success(
@@ -177,10 +177,10 @@ class CustomersController extends Controller
     public function show($id)
     {
         $customer = DB::table('m_mobils')
-        ->where('m_mobils.id', '=' ,$id)
-        ->join('customers', 'm_mobils.customers_id', '=', 'customers.id')
-        ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer, customers.alamat as alamat_customer, customers.no_telp as no_telp, customers.email as email'))
-        ->first();
+            ->where('m_mobils.id', '=', $id)
+            ->join('customers', 'm_mobils.customers_id', '=', 'customers.id')
+            ->select(DB::raw('m_mobils.* , customers.nama_customer  as nama_customer, customers.alamat as alamat_customer, customers.no_telp as no_telp, customers.email as email'))
+            ->first();
 
         if (request()->wantsJson()) {
 
@@ -220,8 +220,6 @@ class CustomersController extends Controller
     public function update(CustomerUpdateRequest $request, $id)
     {
         try {
-
-            print_r($request->all());exit;
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
             $customer = $this->repository->update($request->all(), $id);
 
@@ -232,15 +230,15 @@ class CustomersController extends Controller
 
             if ($request->wantsJson()) {
                 MMobil::where('id', $request->id_mobil)
-                ->update([
-                'merk_mobil' => $request->no_chasis,
-                'no_chasis' => $request->no_chasis,
-                'no_mesin' => $request->no_mesin,
-                'no_pol' => $request->no_pol,
-                'merk_mobil' => $request->merk_mobil,
-                'tipe_mobil' => $request->tipe_mobil,
-                'asuransi' => $request->asuransi
-                ]);
+                    ->update([
+                        'merk_mobil' => $request->no_chasis,
+                        'no_chasis' => $request->no_chasis,
+                        'no_mesin' => $request->no_mesin,
+                        'no_pol' => $request->no_pol,
+                        'merk_mobil' => $request->merk_mobil,
+                        'tipe_mobil' => $request->tipe_mobil,
+                        'asuransi' => $request->asuransi
+                    ]);
                 return ResponseFormatter::success(
                     $customer->toArray(),
                     'Data customer berhasil diubah.'
@@ -272,8 +270,8 @@ class CustomersController extends Controller
      */
     public function destroy($id)
     {
-        
-        $deleted = Customer::Where('id',$id)->first();
+
+        $deleted = Customer::Where('id', $id)->first();
         if (!empty($deleted->id) && isset($deleted->id)) {
             $deleted = $this->repository->delete($id);
             if (request()->wantsJson()) {
