@@ -4,9 +4,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Class CreateMSparepartsTable.
+ * Class CreateMSuppliersTable.
  */
-class CreateMSparepartsTable extends Migration
+class CreateMSuppliersTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -15,10 +15,12 @@ class CreateMSparepartsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('m_spareparts', function(Blueprint $table) {
+		Schema::create('m_suppliers', function(Blueprint $table) {
             $table->increments('id');
 			$table->string('nama');
-			$table->string('satuan');
+			$table->string('alamat');
+			$table->string('nama_pic');
+			$table->string('no_telp_pic');
             $table->timestamps();
 		});
 	}
@@ -30,6 +32,6 @@ class CreateMSparepartsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('m_spareparts');
+		Schema::drop('m_suppliers');
 	}
 }

@@ -79,12 +79,16 @@ class TPenerimaanBarangsController extends Controller
     {
         try {
 
+            // dd($request->all());exit;
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
             $tanggal_penerimaan = date('Y-m-d', strtotime($request->tanggal_penerimaan));
             // $tPenerimaanBarang = $this->repository->create($request->all());
             $penerimaan = new TPenerimaanBarang;
             $penerimaan->tanggal_penerimaan = $tanggal_penerimaan;
-            $penerimaan->nama_supplier = $request->nama_supplier;
+            $penerimaan->m_sparepart_id = $request->sparepart_id;
+            $penerimaan->m_supplier_id = $request->supplier_id;
+            $penerimaan->kode_part = $request->kode_part;
+            $penerimaan->qty = $request->qty;
             $penerimaan->save();
 
             $response = [
@@ -93,21 +97,16 @@ class TPenerimaanBarangsController extends Controller
             ];
 
             if ($request->wantsJson()) {
-                $sparepart = new MSparepart;
-                $sparepart->t_penerimaan_barangs_id = $penerimaan->id;
-                $sparepart->nama = $request->nama_sparepart;
-                $sparepart->kode_part = $request->kode_part;
-                $sparepart->qty = $request->qty;
-                $sparepart->save();
+                
 
-                if ($sparepart->id) {
-                    return ResponseFormatter::success($sparepart, 'Data sparepart berhasil ditambahkan');
+                if ($penerimaan->id) {
+                    return ResponseFormatter::success($penerimaan, 'Data penerimaan berhasil ditambahkan');
                 }else{
-                    return ResponseFormatter::error($response, 'Data sparepart gagal ditambahkan');
+                    return ResponseFormatter::error($response, 'Data penerimaan gagal ditambahkan');
                 }
             }
 
-            return redirect()->back()->with('message', $response['message']);
+            return ResponseFormatter::success(request()->all());
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([

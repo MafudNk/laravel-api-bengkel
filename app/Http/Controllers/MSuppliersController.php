@@ -2,42 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\MSparepart;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\MSparepartCreateRequest;
-use App\Http\Requests\MSparepartUpdateRequest;
-use App\Repositories\MSparepartRepository;
-use App\Validators\MSparepartValidator;
+use App\Http\Requests\MSupplierCreateRequest;
+use App\Http\Requests\MSupplierUpdateRequest;
+use App\Repositories\MSupplierRepository;
+use App\Validators\MSupplierValidator;
 
 /**
- * Class MSparepartsController.
+ * Class MSuppliersController.
  *
  * @package namespace App\Http\Controllers;
  */
-class MSparepartsController extends Controller
+class MSuppliersController extends Controller
 {
     /**
-     * @var MSparepartRepository
+     * @var MSupplierRepository
      */
     protected $repository;
 
     /**
-     * @var MSparepartValidator
+     * @var MSupplierValidator
      */
     protected $validator;
 
     /**
-     * MSparepartsController constructor.
+     * MSuppliersController constructor.
      *
-     * @param MSparepartRepository $repository
-     * @param MSparepartValidator $validator
+     * @param MSupplierRepository $repository
+     * @param MSupplierValidator $validator
      */
-    public function __construct(MSparepartRepository $repository, MSparepartValidator $validator)
+    public function __construct(MSupplierRepository $repository, MSupplierValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -51,20 +50,20 @@ class MSparepartsController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $mSpareparts = $this->repository->all();
+        $mSuppliers = $this->repository->all();
 
         if (request()->wantsJson()) {
 
-            return ResponseFormatter::success($mSpareparts, 'Data sparepart berhasil diambil');
+            return ResponseFormatter::success($mSuppliers, 'data master supplier');
         }
 
-        return view('mSpareparts.index', compact('mSpareparts'));
+        return view('mSuppliers.index', compact('mSuppliers'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  MSparepartCreateRequest $request
+     * @param  MSupplierCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      *
@@ -76,22 +75,25 @@ class MSparepartsController extends Controller
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $mSparepart = $this->repository->create($request->all());
+            $mSupplier = $this->repository->create($request->all());
 
             $response = [
-                'message' => 'MSparepart created.',
-                'data'    => $mSparepart->toArray(),
+                'message' => 'MSupplier created.',
+                'data'    => $mSupplier->toArray(),
             ];
 
             if ($request->wantsJson()) {
 
-                return ResponseFormatter::success($response,'Data sparepart berhasil ditambahkan');
+                return ResponseFormatter::success($mSupplier, 'data berhasil ditambahkan');
             }
 
             return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
-                return ResponseFormatter::error($e->getMessageBag(), 'Data gagal ditambahkan');
+                return response()->json([
+                    'error'   => true,
+                    'message' => $e->getMessageBag()
+                ]);
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
@@ -107,14 +109,14 @@ class MSparepartsController extends Controller
      */
     public function show($id)
     {
-        $mSparepart = $this->repository->find($id);
+        $mSupplier = $this->repository->find($id);
 
         if (request()->wantsJson()) {
 
-            return ResponseFormatter::success($mSparepart, 'Data sparepart berhasil diambil');
+            return ResponseFormatter::success($mSupplier, 'data detail supplier');
         }
 
-        return view('mSpareparts.show', compact('mSparepart'));
+        return view('mSuppliers.show', compact('mSupplier'));
     }
 
     /**
@@ -126,37 +128,37 @@ class MSparepartsController extends Controller
      */
     public function edit($id)
     {
-        $mSparepart = $this->repository->find($id);
+        $mSupplier = $this->repository->find($id);
 
-        return view('mSpareparts.edit', compact('mSparepart'));
+        return view('mSuppliers.edit', compact('mSupplier'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  MSparepartUpdateRequest $request
+     * @param  MSupplierUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      *
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function update(MSparepartUpdateRequest $request, $id)
+    public function update(MSupplierUpdateRequest $request, $id)
     {
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $mSparepart = $this->repository->update($request->all(), $id);
+            $mSupplier = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'MSparepart updated.',
-                'data'    => $mSparepart->toArray(),
+                'message' => 'MSupplier updated.',
+                'data'    => $mSupplier->toArray(),
             ];
 
             if ($request->wantsJson()) {
 
-                return ResponseFormatter::success($response,'Data sparepart berhasil diubah');
+                return ResponseFormatter::success($mSupplier, 'data berhasil di update');
             }
 
             return redirect()->back()->with('message', $response['message']);
@@ -164,7 +166,10 @@ class MSparepartsController extends Controller
 
             if ($request->wantsJson()) {
 
-                return ResponseFormatter::error($e->getMessageBag(), 'Data gagal diubah');
+                return response()->json([
+                    'error'   => true,
+                    'message' => $e->getMessageBag()
+                ]);
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
@@ -181,25 +186,16 @@ class MSparepartsController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = MSparepart::where('id', $id)->first();
+        $deleted = $this->repository->delete($id);
 
-        if (!empty($deleted->id) && isset($deleted->id)) {
-            $deleted = $this->repository->delete($id);
-            if (request()->wantsJson()) {
+        if (request()->wantsJson()) {
 
-                return ResponseFormatter::success(
-                    $deleted,
-                    'Data sparepart berhasil dihapus.'
-                );
-            }
-        } else {
-            if (request()->wantsJson()) {
-
-                return ResponseFormatter::error(
-                    null,
-                    'Data sparepart gagal dihapus.'
-                );
-            }
+            return response()->json([
+                'message' => 'MSupplier deleted.',
+                'deleted' => $deleted,
+            ]);
         }
+
+        return redirect()->back()->with('message', 'MSupplier deleted.');
     }
 }

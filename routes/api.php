@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\MMobilsController;
 use App\Http\Controllers\MSparepartsController;
+use App\Http\Controllers\MSuppliersController;
 use App\Http\Controllers\TPenerimaanBarangsController;
 use App\Http\Controllers\TPerbaikansController;
 
@@ -38,6 +39,7 @@ Route::middleware('auth:api','VerifyApi')->group(function(){
         'sparepart' => MSparepartsController::class,
         'perbaikan' => TPerbaikansController::class,
         'penerimaan_barang' => TPenerimaanBarangsController::class,
+        'supplier' => MSuppliersController::class,
     ]);
     Route::get('/validate-token', function () {
         return ['data' => 'Token is valid'];

@@ -4,6 +4,7 @@ namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 /**
  * Class TPenerimaanBarang.
  *
@@ -19,7 +20,11 @@ class TPenerimaanBarang extends Model
      * @var array
      */
     protected $fillable = [
-        'nama_supplier',	'tanggal_penerimaan'
-    ];
 
+        'm_sparepart_id',
+        'm_supplier_id',
+        'kode_part',
+        'qty',
+        'tanggal_penerimaan'
+    ];
 }

@@ -38,6 +38,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\TPenerimaanBarangRepository::class, \App\Repositories\TPenerimaanBarangRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\TPenerimaanBarangDetailRepository::class, \App\Repositories\TPenerimaanBarangDetailRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\TPerbaikanJasaRepository::class, \App\Repositories\TPerbaikanJasaRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\MSupplierRepository::class, \App\Repositories\MSupplierRepositoryEloquent::class);
         //:end-bindings:
     }
 }

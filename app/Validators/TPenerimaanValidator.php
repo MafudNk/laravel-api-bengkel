@@ -19,11 +19,11 @@ class TPenerimaanValidator extends LaravelValidator
      */
     protected $rules = [
         ValidatorInterface::RULE_CREATE => [
-            'nama_sparepart' => 'required|max:255',
+            'sparepart_id' => 'required',
             'kode_part' => 'required|max:255',
             'qty' => 'required|max:255',
             'tanggal_penerimaan' => 'required|max:255',
-            'nama_supplier' => 'required|max:255',
+            'supplier_id' => 'required',
         ],
         ValidatorInterface::RULE_UPDATE => [],
     ];

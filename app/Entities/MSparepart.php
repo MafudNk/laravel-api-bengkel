@@ -20,7 +20,7 @@ class MSparepart extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',	'kode_part',	'qty'	
+        'nama', 'satuan'
     ];
 
 }
