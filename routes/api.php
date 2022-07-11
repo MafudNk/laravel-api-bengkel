@@ -40,6 +40,7 @@ Route::middleware('auth:api','VerifyApi')->group(function(){
         'perbaikan' => TPerbaikansController::class,
         'penerimaan_barang' => TPenerimaanBarangsController::class,
         'supplier' => MSuppliersController::class,
+        'user' => UserController::class,
     ]);
     Route::get('/validate-token', function () {
         return ['data' => 'Token is valid'];
