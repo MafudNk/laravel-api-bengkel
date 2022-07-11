@@ -29,6 +29,7 @@ use App\Http\Controllers\TPerbaikansController;
 Route::post('token', [AuthController::class, 'auth']);
 
 Route::post('/customer_post/{id}', [CustomersController::class, 'update_post']);
+Route::post('/user_post/{id}', [UserController::class, 'update_post']);
 /**Midlleware for Auth Routes */
 Route::middleware('auth:api','VerifyApi')->group(function(){
     Route::resources([

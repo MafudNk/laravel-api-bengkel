@@ -87,8 +87,27 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+ 
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        
+        $user->save();
+        return ResponseFormatter::success($user, 'sukses');
     }
+    public function update_post(Request $request, $id)
+    {
+        $user = User::find($id);
+ 
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        
+        $user->save();
+        return ResponseFormatter::success($user, 'sukses');
+    }
+    
 
     /**
      * Remove the specified resource from storage.
