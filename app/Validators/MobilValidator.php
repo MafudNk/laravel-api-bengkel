@@ -19,6 +19,7 @@ class MobilValidator extends LaravelValidator
      */
     protected $rules = [
         ValidatorInterface::RULE_CREATE => [
+            'customers_id' => 'required|exists:customers,id',
             'nama' => 'required|max:255',
             'no_chasis' => 'required|max:255',
             'no_mesin' => 'required|max:255',

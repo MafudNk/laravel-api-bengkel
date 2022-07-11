@@ -21,6 +21,6 @@ class MMobil extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',  'no_chasis', 'no_mesin', 'no_pol', 'merk_mobil', 'tipe_mobil', 'asuransi'
+        'nama',  'customers_id', 'no_chasis', 'no_mesin', 'no_pol', 'merk_mobil', 'tipe_mobil', 'asuransi'
     ];
 }
