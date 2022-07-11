@@ -149,7 +149,7 @@ class CustomersController extends Controller
                 //     return ResponseFormatter::error($response, 'Data customer dan mobil gagal ditambahkan');
                 // }
                 return ResponseFormatter::success(
-                    $response,
+                    $customer,
                     'Data customer berhasil ditambahkan.'
                 );
             }
