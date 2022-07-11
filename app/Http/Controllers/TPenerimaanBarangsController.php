@@ -55,7 +55,7 @@ class TPenerimaanBarangsController extends Controller
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $tPenerimaanBarangs = DB::table('t_penerimaan_barangs')
             ->join('m_spareparts', 't_penerimaan_barangs.id', '=', 'm_spareparts.t_penerimaan_barangs_id')
-            ->select(DB::raw('t_penerimaan_barangs.*, m_spareparts.nama as nama_sparepart, m_spareparts.kode_part , m_spareparts.qty'))
+            ->select(DB::raw('t_penerimaan_barangs.*, m_spareparts.nama as nama_sparepart'))
             ->get();
 
         if (request()->wantsJson()) {
